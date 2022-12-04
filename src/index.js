@@ -12,22 +12,21 @@ const countryInfo = document.querySelector('.country-info');
 const searchCountry = () => {
   let name = searchBox.value.trim();
   if (name === '' || name === undefined) {
+    clearResult();
     Notiflix.Notify.failure('Enter the name of the country');
   } else {
     fetchCountries(name)
       .then(data => {
-        console.log(`Data: ${data}`);
-        console.log(`Liczba obiektów: ${data.length}`);
+        // console.log(`Data: ${data}`);
+        // console.log(`Liczba obiektów: ${data.length}`);
         if (data.length > 10) {
           Notiflix.Notify.info(
             'Too many matches found. Please enter a more specific name.'
           );
-        } else if (data.length < 10 && data.length > 2) {
-          renderList(data);
-          countryInfo.innerHTML = '<p>Kilka krajów</p>';
         } else if (data.length === 1) {
           renderCountryCard(data);
-          countryList.innerHTML = '<p>Jedno państwo</p>';
+        } else {
+          renderList(data);
         }
       })
       .catch(error => {
@@ -37,11 +36,37 @@ const searchCountry = () => {
 };
 
 const renderList = data => {
-  const makrup = data.map(object => {
-    return '<li class = "list__item"> <img class = "list__img" src = "${object.flag}" alt="${object.name} flag" width = "55"> <p class = "list__name">${object.name}</p></li>';
-  });
-  join('');
-  countryList.innerHTML = makrup;
+  const markup = data
+    .map(country => {
+      return `<li class="list__item">
+      <img class="list__flag" src="${country.flag}" alt="Flag of ${country.name}" width="55" >
+      <p class="list__name">${country.name}</p>
+      </li>`;
+    })
+    .join('');
+  countryInfo.innerHTML = markup;
+};
+
+const renderCountryCard = data => {
+  const markup = data
+    .map(country => {
+      return `<img class="country__flag" src="${country.flag}" alt="Flag of ${
+        country.name
+      }" width="55" >
+      <span class="country__name">${country.name}</span>
+      <p class="country__data"><b>Capital</b>: ${country.capital}</p>
+      <p class="country__data"><b>Population</b>: ${country.population}</p>
+      <p class="country__data"><b>Languages</b>: ${country.languages.map(
+        language => ' ' + language.name
+      )}</p>`;
+    })
+    .join('');
+  countryInfo.innerHTML = markup;
 };
 
 searchBox.addEventListener('input', debounce(searchCountry, DEBOUNCE_DELAY));
+
+function clearResult() {
+  countryList.innerHTML = '';
+  countryInfo.innerHTML = '';
+}
