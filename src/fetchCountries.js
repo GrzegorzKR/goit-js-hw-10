@@ -6,7 +6,7 @@ const fetchCountries = name => {
       if (!response.ok) {
         throw new Error('fetchCountries response error', response.status);
       }
-      console.log('Response from fetchCountries: ', response);
+      // console.log('Response from fetchCountries: ', response);
       return response.json();
     })
     .catch(error => {
