@@ -13,7 +13,10 @@ const searchCountry = () => {
   let name = searchBox.value.trim();
   if (name === '' || name === undefined) {
     clearResult();
-    Notiflix.Notify.failure('Enter the name of the country');
+    Notiflix.Notify.info('Enter the name of the country');
+  } else if (name.includes('-')) {
+    Notiflix.Notify.info('Only use letters');
+    clearResult();
   } else {
     fetchCountries(name)
       .then(data => {
@@ -31,6 +34,7 @@ const searchCountry = () => {
       })
       .catch(error => {
         Notiflix.Notify.failure('Oops, there is no country with that name');
+        clearResult();
       });
   }
 };
