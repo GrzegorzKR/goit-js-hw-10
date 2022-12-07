@@ -14,8 +14,8 @@ const searchCountry = () => {
   if (name === '' || name === undefined) {
     clearResult();
     Notiflix.Notify.info('Enter the name of the country');
-  } else if (name.includes('-')) {
-    Notiflix.Notify.info('Only use letters');
+  } else if (!/^[A-Za-z\s\-]*$/.test(name)) {
+    Notiflix.Notify.info('Use only letters of the alphabet, spaces and "-"');
     clearResult();
   } else {
     fetchCountries(name)
